@@ -1,4 +1,4 @@
-iMED Calc
+<!DOCTYPE html>
 <html lang="ka">
 <head>
     <meta charset="UTF-8" />
@@ -23,6 +23,7 @@ iMED Calc
             --ring: rgba(34, 211, 238, 0.35);
             --shadow-3: 0 10px 30px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.35);
             --radius-2xl: 1.25rem;
+            --transition: all 0.3s ease;
         }
 
         [data-theme="light"] {
@@ -47,9 +48,9 @@ iMED Calc
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
-            transition: background-color .3s, color .3s;
+            transition: var(--transition);
             line-height: 1.6;
-            font-size: 16px; /* Default font size for desktop */
+            font-size: 16px;
         }
         [data-theme="dark"] body {
             background: radial-gradient(80rem 40rem at 10% -10%, rgba(129,140,248,.08), transparent 60%),
@@ -69,7 +70,7 @@ iMED Calc
             justify-content: space-between;
             flex-wrap: wrap;
             border: 1px solid var(--surface);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
         .brand { display: flex; align-items: center; gap: .9rem; }
@@ -83,6 +84,7 @@ iMED Calc
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            transition: var(--transition);
         }
         [data-theme="light"] .logo {
             box-shadow: 0 8px 25px rgba(6, 182, 212, .2);
@@ -105,21 +107,47 @@ iMED Calc
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         .theme-toggle:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0,0,0,.1);
         }
 
-        .grid { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            color: var(--card);
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(34,211,238,.25);
+            border: none;
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            filter: saturate(1.1);
+        }
+
+        .grid { display: none; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid.active { display: grid; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .card {
             background: var(--card);
             border: 1px solid var(--surface);
             border-radius: var(--radius-2xl);
             padding: 1.5rem;
             box-shadow: var(--shadow-3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
         }
         .card:hover {
             transform: translateY(-5px);
@@ -139,7 +167,7 @@ iMED Calc
             margin-bottom: 1rem;
         }
         .muted { color: var(--muted); font-size: .92rem; }
-        .row { display: grid; gap: 1rem; }
+        .row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
         
         label { display: block; font-size: .9rem; margin-bottom: 0.25rem; color: var(--text); }
         input, select {
@@ -150,7 +178,7 @@ iMED Calc
             border: 1px solid var(--muted);
             border-radius: .75rem;
             outline: none;
-            transition: border-color .2s, box-shadow .2s;
+            transition: var(--transition);
         }
         input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring); }
         .btns { display: flex; gap: .8rem; margin-top: 1.5rem; flex-wrap: wrap; }
@@ -160,7 +188,7 @@ iMED Calc
             border-radius: .75rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all .2s ease;
+            transition: var(--transition);
             background: linear-gradient(135deg, var(--brand), var(--brand-2));
             color: var(--card);
             box-shadow: 0 8px 20px rgba(34,211,238,.25);
@@ -180,6 +208,7 @@ iMED Calc
             border: 1px dashed var(--brand-2);
             font-weight: 700;
             letter-spacing: .3px;
+            transition: var(--transition);
         }
         .note { margin-top: 1rem; padding: .8rem 1rem; border-left: 4px solid var(--warn); background: rgba(245, 158, 11, .1); border-radius:.5rem; }
         .success { border-left-color: var(--ok); background: rgba(34, 197, 94, .1); }
@@ -200,18 +229,19 @@ iMED Calc
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 600px) {
-            body { font-size: 15px; } /* Slightly smaller font for mobile */
+            body { font-size: 15px; }
             .container { padding: 1.5rem 1rem 3rem; }
-            header { padding: 1rem; }
+            header { padding: 1rem; flex-direction: column; }
             .logo { width: 40px; height: 40px; }
             .brand h1 { font-size: 1.2rem; }
             .brand p { font-size: .85rem; }
             .theme-toggle { padding: 0.4rem 0.8rem; }
+            .nav-menu { gap: 0.8rem; margin-top: 1rem; }
             .grid { gap: 1rem; margin-top: 1.5rem; }
             .card { padding: 1.2rem; }
             .card h2 { font-size: 1.15rem; }
             .formula { font-size: 0.95rem; }
-            .row { grid-template-columns: 1fr; } /* Stack columns on small screens */
+            .row { grid-template-columns: 1fr; }
             .btns button { padding: 0.7rem 1rem; }
             .result { padding: 0.8rem 1rem; }
         }
@@ -279,6 +309,12 @@ iMED Calc
             </button>
         </header>
         <p class="disclaimer">დამხმარე ხელსაწყო. სავალდებულოა შედეგების გადამოწმება კლინიკურ პროტოკოლებთან.</p>
+        <div class="nav-menu">
+            <button class="nav-btn" onclick="showCalculator('bicarb-card')">სოდა ბუფერი</button>
+            <button class="nav-btn" onclick="showCalculator('potassium-card')">კალიუმის გადასხმა</button>
+            <button class="nav-btn" onclick="showCalculator('kcoef-card')">K კოეფიციენტი</button>
+            <button class="nav-btn" onclick="showCalculator('solu-card')">სოლუმედროლი</button>
+        </div>
         <div class="grid" id="grid">
             <section class="card" id="bicarb-card">
                 <h2>სოდა ბუფერი — გადასხმის გამოთვლა <span class="tag">ფორმულა</span></h2>
@@ -354,10 +390,6 @@ iMED Calc
                         <label for="solu-weight">პაციენტის წონა (კგ)</label>
                         <input id="solu-weight" type="number" min="0" step="0.1" placeholder="მაგ. 70" />
                     </div>
-                    <div>
-                        <label for="solu-dummy">დოზირების ფურცელი</label>
-                        <input id="solu-dummy" type="text" placeholder="არასავალდებულო შენიშვნა"/>
-                    </div>
                 </div>
                 <div class="btns">
                     <button onclick="calcSolu()">გამოთვლა</button>
@@ -393,6 +425,20 @@ iMED Calc
             }
         }
         document.addEventListener('DOMContentLoaded', applyTheme);
+
+        // Show specific calculator
+        function showCalculator(cardId) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.display = 'none';
+            });
+            const selectedCard = document.getElementById(cardId);
+            if (selectedCard) {
+                selectedCard.style.display = 'block';
+            }
+            const grid = document.getElementById('grid');
+            grid.classList.add('active');
+        }
 
         // Core calculator functions
         const fmt = (n) => {
