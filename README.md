@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+iMED Calc
 <html lang="ka">
 <head>
     <meta charset="UTF-8" />
