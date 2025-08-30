@@ -49,6 +49,7 @@
             color: var(--text);
             transition: background-color .3s, color .3s;
             line-height: 1.6;
+            font-size: 16px; /* Default font size for desktop */
         }
         [data-theme="dark"] body {
             background: radial-gradient(80rem 40rem at 10% -10%, rgba(129,140,248,.08), transparent 60%),
@@ -68,6 +69,7 @@
             justify-content: space-between;
             flex-wrap: wrap;
             border: 1px solid var(--surface);
+            transition: all 0.3s ease;
         }
         
         .brand { display: flex; align-items: center; gap: .9rem; }
@@ -138,9 +140,7 @@
         }
         .muted { color: var(--muted); font-size: .92rem; }
         .row { display: grid; gap: 1rem; }
-        @media (min-width: 600px) {
-            .row { grid-template-columns: 1fr 1fr; }
-        }
+        
         label { display: block; font-size: .9rem; margin-bottom: 0.25rem; color: var(--text); }
         input, select {
             width: 100%;
@@ -198,6 +198,23 @@
         .chip { background: rgba(34,211,238,.12); border-color: rgba(34,211,238,.25); color: #a5f3fc; }
         [data-theme="light"] .chip { background: rgba(6, 182, 212, .1); border-color: rgba(6, 182, 212, .25); color: #0891b2; }
 
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 600px) {
+            body { font-size: 15px; } /* Slightly smaller font for mobile */
+            .container { padding: 1.5rem 1rem 3rem; }
+            header { padding: 1rem; }
+            .logo { width: 40px; height: 40px; }
+            .brand h1 { font-size: 1.2rem; }
+            .brand p { font-size: .85rem; }
+            .theme-toggle { padding: 0.4rem 0.8rem; }
+            .grid { gap: 1rem; margin-top: 1.5rem; }
+            .card { padding: 1.2rem; }
+            .card h2 { font-size: 1.15rem; }
+            .formula { font-size: 0.95rem; }
+            .row { grid-template-columns: 1fr; } /* Stack columns on small screens */
+            .btns button { padding: 0.7rem 1rem; }
+            .result { padding: 0.8rem 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -229,26 +246,6 @@
                         <path d="M199.258 264.925V259.041H202.955V264.925H199.258Z" fill="#141846"/>
                         <path d="M206.966 264.925V259.041H210.663V264.925H206.966Z" fill="#141846"/>
                         <path d="M214.673 264.925V259.041H218.37V264.925H214.673Z" fill="#141846"/>
-                        <path d="M129.894 136.74V142.624H133.591V136.74H129.894Z" fill="#141846"/>
-                        <path d="M129.894 121.452V127.336H133.591V121.452H129.894Z" fill="#141846"/>
-                        <path d="M129.894 106.164V112.048H133.591V106.164H129.894Z" fill="#141846"/>
-                        <path d="M129.894 90.876V96.7601H133.591V90.876H129.894Z" fill="#141846"/>
-                        <path d="M129.894 75.5878V81.4719H133.591V75.5878H129.894Z" fill="#141846"/>
-                        <path d="M129.894 60.3005V66.1846H133.591V60.3005H129.894Z" fill="#141846"/>
-                        <path d="M129.894 45.0132V50.8973H133.591V45.0132H129.894Z" fill="#141846"/>
-                        <path d="M129.894 29.7259V35.61H133.591V29.7259H129.894Z" fill="#141846"/>
-                        <path d="M129.894 14.4386V20.3227H133.591V14.4386H129.894Z" fill="#141846"/>
-                        <path d="M137.601 20.3227V14.4386H141.298V20.3227H137.601Z" fill="#141846"/>
-                        <path d="M145.308 20.3227V14.4386H149.005V20.3227H145.308Z" fill="#141846"/>
-                        <path d="M153.015 20.3227V14.4386H156.712V20.3227H153.015Z" fill="#141846"/>
-                        <path d="M160.723 20.3227V14.4386H164.42V20.3227H160.723Z" fill="#141846"/>
-                        <path d="M168.43 20.3227V14.4386H172.127V20.3227H168.43Z" fill="#141846"/>
-                        <path d="M176.137 20.3227V14.4386H179.834V20.3227H176.137Z" fill="#141846"/>
-                        <path d="M183.844 20.3227V14.4386H187.541V20.3227H183.844Z" fill="#141846"/>
-                        <path d="M191.551 20.3227V14.4386H195.248V20.3227H191.551Z" fill="#141846"/>
-                        <path d="M199.258 20.3227V14.4386H202.955V20.3227H199.258Z" fill="#141846"/>
-                        <path d="M206.966 20.3227V14.4386H210.663V20.3227H206.966Z" fill="#141846"/>
-                        <path d="M214.673 20.3227V14.4386H218.37V20.3227H214.673Z" fill="#141846"/>
                         <path d="M129.894 136.74V142.624H133.591V136.74H129.894Z" fill="#141846"/>
                         <path d="M129.894 121.452V127.336H133.591V121.452H129.894Z" fill="#141846"/>
                         <path d="M129.894 106.164V112.048H133.591V106.164H129.894Z" fill="#141846"/>
