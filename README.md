@@ -1,4 +1,4 @@
-<iMED Calc>
+<IMED Calc>
 <html lang="ka">
 <head>
     <meta charset="UTF-8" />
@@ -180,7 +180,7 @@
             outline: none;
             transition: var(--transition);
         }
-        input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring); }
+        input:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring); }
         .btns { display: flex; gap: .8rem; margin-top: 1.5rem; flex-wrap: wrap; }
         button {
             padding: .8rem 1.2rem;
@@ -227,6 +227,28 @@
         .chip { background: rgba(34,211,238,.12); border-color: rgba(34,211,238,.25); color: #a5f3fc; }
         [data-theme="light"] .chip { background: rgba(6, 182, 212, .1); border-color: rgba(6, 182, 212, .25); color: #0891b2; }
 
+        .recommendations {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: .75rem;
+            border: 1px solid var(--muted);
+        }
+        .recommendations table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .recommendations th, .recommendations td {
+            padding: 0.5rem;
+            border: 1px solid var(--muted);
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .recommendations th {
+            background: var(--brand-2);
+            color: var(--card);
+        }
+
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 600px) {
             body { font-size: 15px; }
@@ -244,6 +266,7 @@
             .row { grid-template-columns: 1fr; }
             .btns button { padding: 0.7rem 1rem; }
             .result { padding: 0.8rem 1rem; }
+            .recommendations th, .recommendations td { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -314,6 +337,7 @@
             <button class="nav-btn" onclick="showCalculator('potassium-card')">კალიუმის გადასხმა</button>
             <button class="nav-btn" onclick="showCalculator('kcoef-card')">K კოეფიციენტი</button>
             <button class="nav-btn" onclick="showCalculator('solu-card')">სოლუმედროლი</button>
+            <button class="nav-btn" onclick="showCalculator('crcl-card')">კრეატინინის კლირენსი</button>
         </div>
         <div class="grid" id="grid">
             <section class="card" id="bicarb-card">
@@ -399,10 +423,60 @@
                 <div id="solu-result" class="result" aria-live="polite">შედეგი: —</div>
                 <div class="note success">რეკომენდაცია: პამპი დააყენეთ <strong>200 მლ/სთ</strong>-ზე. გადასხმა უნდა დასრულდეს ~15 წუთში.</div>
             </section>
+            <section class="card" id="crcl-card">
+                <h2>კრეატინინის კლირენსი (CrCl)</h2>
+                <div class="formula">(140 - ასაკი) × წონა × (0.85 თუ ქალი) / (72 × სერუმის კრეატინინი)</div>
+                <p class="muted">შეიყვანეთ პაციენტის მონაცემები. შედეგი გამოისახება ქვემოთ, თან რეკომენდაციებით ანტიბიოტიკების დოზირების შესახებ.</p>
+                <div class="row">
+                    <div>
+                        <label for="crcl-age">ასაკი (წელი)</label>
+                        <input id="crcl-age" type="number" min="0" step="1" placeholder="მაგ. 60" />
+                    </div>
+                    <div>
+                        <label for="crcl-weight">წონა (კგ)</label>
+                        <input id="crcl-weight" type="number" min="0" step="0.1" placeholder="მაგ. 70" />
+                    </div>
+                    <div>
+                        <label for="crcl-gender">სქესი</label>
+                        <select id="crcl-gender">
+                            <option value="male">მამრობითი</option>
+                            <option value="female">მდედრობითი</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="crcl-creatinine">სერუმის კრეატინინი</label>
+                        <input id="crcl-creatinine" type="number" min="0.1" step="0.01" placeholder="მაგ. 1.2 (mg/dL) ან 106 (µmol/L)" />
+                    </div>
+                    <div>
+                        <label for="crcl-unit">ერთეული</label>
+                        <select id="crcl-unit">
+                            <option value="mg/dL">mg/dL</option>
+                            <option value="µmol/L">µmol/L</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btns">
+                    <button onclick="calcCrCl()">გამოთვლა</button>
+                    <button class="ghost" onclick="resetCard('crcl-card')">გასუფთავება</button>
+                    <button class="ghost" onclick="copyResult('crcl-result')">კოპირება</button>
+                </div>
+                <div id="crcl-result" class="result" aria-live="polite">შედეგი: —</div>
+                <div id="crcl-recommendations" class="recommendations" style="display: none;">
+                    <h3>ანტიბიოტიკების დოზირების რეკომენდაციები</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ანტიბიოტიკი</th>
+                                <th>რეკომენდაცია</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crcl-rec-table-body"></tbody>
+                    </table>
+                    <p class="muted">შენიშვნა: ეს არის ზოგადი რეკომენდაციები. გადაამოწმეთ კლინიკურ პროტოკოლებთან და პაციენტის მდგომარეობასთან.</p>
+                </div>
+            </section>
         </div>
-
-        
-        <p class="foot">© 2025 IMEDCalc • შექმნილია სამედიცინო პერსონალისთვის </p>
+        <p class="foot">© 2025 IMEDCalc • შექმნილია სამედიცინო პერსონალისთვის</p>
     </div>
 
     <script>
@@ -491,12 +565,158 @@
             setResult('solu-result', doseMg, 'mg');
         }
 
+        function calcCrCl() {
+            const age = parseFloat(document.getElementById('crcl-age').value);
+            const weight = parseFloat(document.getElementById('crcl-weight').value);
+            const gender = document.getElementById('crcl-gender').value;
+            let creatinine = parseFloat(document.getElementById('crcl-creatinine').value);
+            const unit = document.getElementById('crcl-unit').value;
+            if (!requireValidNumber(age, weight, creatinine) || creatinine <= 0) { 
+                setResult('crcl-result', NaN); 
+                document.getElementById('crcl-recommendations').style.display = 'none';
+                return; 
+            }
+            // Convert µmol/L to mg/dL if necessary (1 mg/dL = 88.4 µmol/L)
+            if (unit === 'µmol/L') {
+                creatinine = creatinine / 88.4;
+            }
+            let genderFactor = gender === 'female' ? 0.85 : 1;
+            const crcl = ((140 - age) * weight * genderFactor) / (72 * creatinine);
+            setResult('crcl-result', crcl, 'მლ/წთ');
+            
+            // Show recommendations
+            const recDiv = document.getElementById('crcl-recommendations');
+            const tableBody = document.getElementById('crcl-rec-table-body');
+            tableBody.innerHTML = ''; // Clear previous
+            let category;
+            if (crcl > 50) category = '>50';
+            else if (crcl >= 30 && crcl <= 50) category = '30-50';
+            else if (crcl >= 10 && crcl < 30) category = '10-30';
+            else category = '<10';
+
+            // Recommendations based on category
+            const recs = {
+                'Amoxicillin': getAmoxicillinRec(category),
+                'Ciprofloxacin': getCiprofloxacinRec(category),
+                'Gentamicin': getGentamicinRec(category),
+                'Meropenem': getMeropenemRec(category),
+                'Vancomycin': getVancomycinRec(category),
+                'Ceftriaxone': getCeftriaxoneRec(category),
+                'Metronidazole': getMetronidazoleRec(category),
+                'Ampicillin': getAmpicillinRec(category),
+                'Levofloxacin': getLevofloxacinRec(category)
+            };
+
+            for (const [antibiotic, rec] of Object.entries(recs)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${antibiotic}</td><td>${rec}</td>`;
+                tableBody.appendChild(row);
+            }
+
+            recDiv.style.display = 'block';
+        }
+
+        function getAmoxicillinRec(category) {
+            switch (category) {
+                case '>50': return '875 mg q12h ან 500 mg q8h (სტანდარტული); 1000 mg q8h (მაღალი დოზა)';
+                case '30-50': return '875 mg q12h ან 500 mg q8h (სტანდარტული); 1000 mg q8h (მაღალი დოზა) - არ საჭიროებს კორექციას';
+                case '10-30': return '500 mg q12h (სტანდარტული); 1000 mg q12h (მაღალი დოზა)';
+                case '<10': return '500 mg q24h (სტანდარტული); 500 mg q12h (მაღალი დოზა)';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getCiprofloxacinRec(category) {
+            switch (category) {
+                case '>50': return 'PO 250-750 mg q12h; IV 400 mg q8-12h';
+                case '30-50': return 'PO 250-750 mg q12h; IV 400 mg q8-12h - არ საჭიროებს კორექციას';
+                case '10-30': return 'PO 250-750 mg q12h; IV 400 mg q8-12h - არ საჭიროებს კორექციას';
+                case '<10': return 'იგივე დოზა q24h (PO/IV)';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getGentamicinRec(category) {
+            switch (category) {
+                case '>50': return '7 mg/kg q24h (გაფართოებული ინტერვალი); 1.5-2.5 mg/kg q8h (ტრადიციული)';
+                case '30-50': return 'იგივე დოზა q12h (ტრადიციული); სინერგია: იგივე დოზა q12h';
+                case '10-30': return 'იგივე დოზა q24h (ტრადიციული); სინერგია: იგივე დოზა q24h';
+                case '<10': return 'იგივე დოზა q48-72h (ტრადიციული); სინერგია: იგივე დოზა q48h';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getMeropenemRec(category) {
+            switch (category) {
+                case '>50': return '500 mg IV q6h (სტანდარტული); 2 g IV q8h (მენინგიტი ან მაღალი MIC)';
+                case '30-50': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '10-30': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '<10': return '500 mg IV q12h (სტანდარტული); 1 g IV q12h (მაღალი დოზა)';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getVancomycinRec(category) {
+            switch (category) {
+                case '>50': return '15-20 mg/kg q12h IV; კრიტიკულად ავად: 25 mg/kg ლოუდინგ დოზა';
+                case '30-50': return 'იგივე დოზა q12-24h; გამოიყენეთ InsightRx AUC 400-600';
+                case '10-30': return 'იგივე დოზა q24-48h; გამოიყენეთ InsightRx AUC 400-600';
+                case '<10': return 'გაზომეთ სერიუმის ლეველები დოზის დასადგენად';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getCeftriaxoneRec(category) {
+            switch (category) {
+                case '>50': return '1-2 g IV q24h (სტანდარტული); 2 g IV q12h (მენინგიტი)';
+                case '30-50': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '10-30': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '<10': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getMetronidazoleRec(category) {
+            switch (category) {
+                case '>50': return '500 mg IV/PO q8h (სტანდარტული)';
+                case '30-50': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '10-30': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                case '<10': return 'იგივე დოზა - არ საჭიროებს კორექციას';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getAmpicillinRec(category) {
+            switch (category) {
+                case '>50': return '1-2 g IV q4-6h (სტანდარტული); 2 g IV q4h (მაღალი დოზა)';
+                case '30-50': return '1-2 g IV q6h (სტანდარტული); 2 g IV q6h (მაღალი დოზა)';
+                case '10-30': return '1-2 g IV q8h';
+                case '<10': return '1-2 g IV q12h';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
+        function getLevofloxacinRec(category) {
+            switch (category) {
+                case '>50': return '500-750 mg IV/PO q24h';
+                case '30-50': return '250-500 mg IV/PO q24h';
+                case '10-30': return '250-500 mg IV/PO q48h';
+                case '<10': return '250 mg IV/PO q48h';
+                default: return 'გადაამოწმეთ პროტოკოლი';
+            }
+        }
+
         function resetCard(cardId) {
             const card = document.getElementById(cardId);
-            const inputs = card.querySelectorAll('input');
-            inputs.forEach(i => i.value = '');
+            const inputs = card.querySelectorAll('input, select');
+            inputs.forEach(i => {
+                if (i.tagName === 'SELECT') i.value = i.options[0].value;
+                else i.value = '';
+            });
             const res = card.querySelector('.result');
             if (res) res.textContent = 'შედეგი: —';
+            const recDiv = card.querySelector('.recommendations');
+            if (recDiv) recDiv.style.display = 'none';
         }
 
         async function copyResult(resultId) {
@@ -525,4 +745,3 @@
     </script>
 </body>
 </html>
-```
