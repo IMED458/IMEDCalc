@@ -1,4 +1,4 @@
-<IMED Calc>
+<!DOCTYPE html>
 <html lang="ka">
 <head>
     <meta charset="UTF-8" />
@@ -187,7 +187,7 @@
             outline: none;
             transition: var(--transition);
             font-size: 0.9rem;
-            min-height: 44px; /* Touch-friendly height */
+            min-height: 44px;
         }
         input:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring); }
         .btns { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
@@ -262,7 +262,6 @@
             color: var(--card);
         }
 
-        /* Mobile Optimization */
         @media (max-width: 600px) {
             body { font-size: 15px; }
             .container { padding: 1rem 0.5rem 2rem; }
@@ -280,7 +279,6 @@
             .btns button { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
             .result { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
             
-            /* Stacked Table for Mobile */
             .recommendations table { display: block; }
             .recommendations thead { display: none; }
             .recommendations tbody, .recommendations tr { display: block; }
@@ -539,15 +537,21 @@
         }
         document.addEventListener('DOMContentLoaded', applyTheme);
 
-        // PWA Service Worker Registration
+        // PWA Service Worker Registration with Error Handling
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(reg => {
-                    console.log('Service Worker registered:', reg);
-                }).catch(err => {
-                    console.error('Service Worker registration failed:', err);
-                });
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(reg => {
+                        console.log('Service Worker რეგისტრირებულია წარმატებით:', reg);
+                    })
+                    .catch(err => {
+                        console.error('Service Worker-ის რეგისტრაცია ვერ მოხერხდა:', err);
+                        toast('Service Worker-ის რეგისტრაცია ვერ განხორციელდა. გთხოვთ, გამოიყენოთ HTTPS ან localhost.');
+                    });
             });
+        } else {
+            console.warn('Service Worker არ არის მხარდაჭერილი ამ ბრაუზერში.');
+            toast('ბრაუზერი არ უჭერს მხარს Service Worker-ს.');
         }
 
         // Show specific calculator
