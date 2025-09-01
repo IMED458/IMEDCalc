@@ -544,7 +544,9 @@
                     .then(reg => {
                         console.log('Service Worker რეგისტრირებულია წარმატებით:', reg);
                     })
-                  
+                    .catch(err => {
+                        console.error('Service Worker-ის რეგისტრაცია ვერ მოხერხდა:', err);
+                        toast('Service Worker-ის რეგისტრაცია ვერ განხორციელდა. გთხოვთ, გამოიყენოთ HTTPS ან localhost.');
                     });
             });
         } else {
