@@ -591,7 +591,7 @@
             const be = parseFloat(document.getElementById('bicarb-be').value);
             if (!requireValidNumber(w, be)) { setResult('bicarb-result', NaN); return; }
             const dose = w * Math.abs(be) * 2 * 0.3;
-            setResult('bicarb-result', dose, '(ერთ.)');
+            setResult('bicarb-result', dose, '(მლ.)');
         }
 
         function calcPotassium() {
@@ -599,7 +599,7 @@
             const lvl = parseFloat(document.getElementById('k-level').value);
             if (!requireValidNumber(w, lvl) || lvl <= 0) { setResult('potassium-result', NaN); return; }
             const amount = (w * 1.74) / lvl;
-            setResult('potassium-result', amount, '(ერთ.)');
+            setResult('potassium-result', amount, '(მლ.)');
         }
 
         function calcKcoef() {
